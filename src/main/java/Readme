@@ -1,0 +1,73 @@
+1. Create model package and create class files User and Role!
+2. Fill in User Instances + Constructors + getter & setters and make User @Entity
+3. Fil Role and make Entity
+
+4. Setup relationships in User for @ManyToMany :
+
+ @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_role",
+    joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+    )
+    private Collection<Role> roles;
+
+
+    5. Create Repo package and UserRepository and make Crud and add @Repository to class!
+
+    6. Create service package and UserService interface!
+
+    7. Create webpack and Dto package within and create a class UserRegistrationDto and fill in needed instances + constructors+getters and setters!
+
+    8. in UserService create a method to save the registration!
+
+    9. Create UserServiceImpl and implement UserService and setup methods to save and get data!
+
+    INject UserRepository :  private UserRepository userRepository;
+
+                                public UserServiceImpl(UserRepository userRepository) {
+                                   // super();
+                                    this.userRepository = userRepository;
+                                }
+
+                                @Autowired not recommended at fields so create constructor for injected field instead!
+
+
+   Continue to create User object! and pass its data! : public User save(UserRegistrationDto registrationDto) {
+
+                                                                 User user = new User(registrationDto.getFistName(),
+                                                                         registrationDto.getLastName(),
+                                                                         registrationDto.getEmail(),
+                                                                         registrationDto.getPassword(),
+                                                                         Arrays.asList(new Role("ROLE_USER")))
+
+                                                                       "U must create constructor for Role in Role class file"!
+
+   10. Create UserRegistrationController in web dir = UsrRegistrationController and make it @Controller and @RequestMapping ...
+   inject UserService and create constructor for that because @Autowired is not recommended at fields!
+   @Controller
+   @RequestMapping("/registration")
+   public class UserRegistrationController {
+
+       // Injected class
+       private UserService userService;
+
+       public UserRegistrationController(UserService userService) {
+           this.userService = userService;
+       }
+
+  *** Define a handler method to handle http request save.! ****
+
+      public String registerUserAccount(@ModelAttribute ("user")UserRegistrationDto registrationDto) {
+
+          userService.save(registrationDto);
+
+
+          return "redirect:/registration?success";
+      }
+
+  }
+
+
+  11. Now create a thymeleaf template registration.html in template folder
+
+
